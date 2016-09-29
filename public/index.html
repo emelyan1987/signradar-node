@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SignRadar - Find others who know sign language around you!</title>
+    <link rel="shortcut icon" href="/assets/image/logo.png">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/assets/css/animate.css">
+    <link rel="stylesheet" type="text/css" href="/assets/font-awesome/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+
+    <link href="/assets/css/jquery-ui.css" rel="stylesheet" />
+
+
+    <style type="text/css">
+
+        .chat
+        {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chat li
+        {
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dotted #B3A9A9;
+        }
+
+        .chat li.left .chat-body
+        {
+            margin-left: 60px;
+        }
+
+        .chat li.right .chat-body
+        {
+            margin-right: 60px;
+        }
+
+
+        .chat li .chat-body p
+        {
+            margin: 0;
+            color: #777777;
+        }
+
+        .panel .slidedown .glyphicon, .chat .glyphicon
+        {
+            margin-right: 5px;
+        }
+
+        .panel-body
+        {
+            overflow-y: scroll;
+            height: 250px;
+        }
+
+        ::-webkit-scrollbar-track
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar
+        {
+            width: 12px;
+            background-color: #F5F5F5;
+        }
+
+        ::-webkit-scrollbar-thumb
+        {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+            background-color: #555;
+        }
+
+
+    </style>
+
+    <style type="text/css">
+
+        .signal {
+            border: 5px solid #333;
+            border-radius: 30px;
+            height: 30px;
+            left: 50%;
+            margin: -15px 0 0 -15px;
+            opacity: 0;
+            position: absolute;
+            top: 50%;
+            width: 30px;
+
+            animation: pulsate 1s ease-out;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes pulsate {
+            0% {
+                transform: scale(.1);
+                opacity: 0.0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+
+    </style>
+
+    <style type="text/css">
+
+        .loader {
+            color: #ffffff;
+            font-size: 90px;
+            text-indent: -9999em;
+            overflow: hidden;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            margin: 72px auto;
+            position: relative;
+            -webkit-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-animation: load6 1.7s infinite ease;
+            animation: load6 1.7s infinite ease;
+        }
+
+        @-webkit-keyframes load6 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+
+            5%, 95% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+
+            10%, 59% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+            }
+
+            20% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+            }
+
+            38% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+        }
+
+        @keyframes load6 {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+
+            5%, 95% {
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+
+            10%, 59% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.087em -0.825em 0 -0.42em, -0.173em -0.812em 0 -0.44em, -0.256em -0.789em 0 -0.46em, -0.297em -0.775em 0 -0.477em;
+            }
+
+            20% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.338em -0.758em 0 -0.42em, -0.555em -0.617em 0 -0.44em, -0.671em -0.488em 0 -0.46em, -0.749em -0.34em 0 -0.477em;
+            }
+
+            38% {
+                box-shadow: 0 -0.83em 0 -0.4em, -0.377em -0.74em 0 -0.42em, -0.645em -0.522em 0 -0.44em, -0.775em -0.297em 0 -0.46em, -0.82em -0.09em 0 -0.477em;
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                box-shadow: 0 -0.83em 0 -0.4em, 0 -0.83em 0 -0.42em, 0 -0.83em 0 -0.44em, 0 -0.83em 0 -0.46em, 0 -0.83em 0 -0.477em;
+            }
+        }
+
+    </style>
+
+    <style type="text/css">
+        .progressbar {
+            width: 245px;
+            height: 5px;
+            margin: 0px 2px;
+            border: 0px;
+            bottom: 41px;
+            position: absolute;
+        }
+
+        .progressbarlabel {
+            width: 245px;
+            height: 5px;
+            position: absolute;
+            text-align: center;
+            font-size: small;
+        }
+
+        .ui-progressbar .ui-progressbar-value {
+            background-color: #2f4158;
+        }
+
+        .fileUpload {
+            position: relative;
+            overflow: hidden;
+            /*margin: 10px;*/
+        }
+
+        .fileUpload input.upload {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+        .thumb-image {
+            float: left;
+            width: 100px;
+            height: 100px;
+            position: relative;
+            padding: 5px;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function show_result(msg, type) {
+
+            var htmlDivResult = '<div id="div_result" style="display:none;width:100%;height:auto;overflow:hidden;position:fixed;top:0;left:0;z-index:99999;line-height:30px;font-size:15px;text-align:center;padding:10px"></div>';
+            $('#div_result_body').html(htmlDivResult);
+
+            if (type == 1) {
+                $('#div_result').css('background-color', 'green');
+                $('#div_result').css('color', 'white');
+            }
+            else if (type == 2) {
+                $('#div_result').css('background-color', 'red');
+                $('#div_result').css('color', 'white');
+            }
+            else {
+                $('#div_result').css('background-color', 'orange');
+                $('#div_result').css('color', 'white');
+            }
+
+            $('#div_result').html(msg);
+            // $('#div_success').show();
+            $('#div_result').slideDown().delay(5000).slideUp('slow');
+
+        }
+
+    </script>
+
+    <!-- ########################### -->
+    <!-- XRTC ADDED CODE BLOCK BEGIN -->
+    <!-- ########################### -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+
+    <style>
+        .experiment {
+            border: 1px solid rgb(189, 189, 189);
+            margin: 1em 3em;
+            border-radius: .2em;
+            text-align: left;
+        }
+
+        .experiment .header {
+            padding: .2em .4em;
+        }
+
+        .experiment .description {
+            padding: .8em 1.4em;
+        }
+
+        pre {
+            overflow: auto;
+        }
+
+        * {
+            word-wrap: break-word;
+        }
+
+        video {
+            object-fit: fill;
+            width: 30%;
+        }
+
+        button,
+        input,
+        select {
+            font-weight: normal;
+            padding: 2px 4px;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: none;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .make-center {
+            text-align: center;
+            padding: 5px 10px;
+        }
+
+        img, input, textarea {
+            max-width: 100%;
+        }
+
+        @media all and (max-width: 500px) {
+            .fork-left, .fork-right, .github-stargazers {
+                display: none;
+            }
+        }
+
+        .videos-container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <!-- ########################### -->
+    <!-- XRTC ADDED CODE BLOCK END -->
+    <!-- ########################### -->
+
+</head>
+
+<body>
+
+<!-- ########################### -->
+<!-- XRTC ADDED CODE BLOCK BEGIN -->
+<!-- ########################### -->
+<script src="https://cdn.webrtc-experiment.com:443/rmc3.js"></script>
+<script src="https://cdn.webrtc-experiment.com/getMediaElement.js"></script>
+<script src="https://srwebrtc.herokuapp.com/socket.io/socket.io.js"></script>
+<!-- ########################### -->
+<!-- XRTC ADDED CODE BLOCK END -->
+<!-- ########################### -->
+
+
+<script id="Chat_template" type="text/x-jquery-tmpl">
+
+        <li class="left clearfix">
+                                <span class="chat-img pull-left">
+                                    <img src="${AvatarImage}" alt="${UserName}" class="img-circle" title="${UserName}" style="width:50px;height:50px" />
+                                </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">${UserName}</strong>
+
+ <small class="pull-right text-muted btn_ReportUserflag${UserId}">
+ <a class="btn_spamChat" title="Spam User" data-id="${ChatId}" data-userid="${UserId}" data-userImg="${AvatarImage}" data-username="${UserName}" style="cursor:pointer"> <i class="fa fa-flag"></i> </a>
+</small>
+                                        <small class="pull-right text-muted">
+                                            <span{ class="glyphicon glyphicon-time"></span>${CreationTSStr}
+                                        </small>
+                                    </div>
+                                    <p>
+                                       ${ChatLine}
+                                    </p>
+                                </div>
+                            </li>
+
+       </script>
+
+<script id="Post_template" type="text/x-jquery-tmpl">
+
+        <li class="left clearfix">
+                                <span class="chat-img pull-left">
+                                    <img src="${AvatarImage}" alt="${Username}" class="img-circle" title="${Username}" style="width:50px;height:50px" />
+                                </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">${Username}</strong>
+
+                                        <small class="pull-right text-muted">
+                                           <span{ class="glyphicon glyphicon-time"></span>${CreationTSStr}
+                                        </small>
+
+                                    </div>
+                                    <p>
+                                       ${Message}
+                                    </p>
+                                    <p>
+                                        {{html fn_showPostContentHtml(media,mediaSource)}}
+                                    </p>
+                                </div>
+
+            <div style="width:100%;height:auto;overflow:hidden;text-align:right">
+
+ <small class="pull-right text-muted " style="margin-left:8px">
+ <a class="btn_show_replyPost" title="Reply User" data-id="${Id}" data-userid="${tblUserId}" data-userImg="${AvatarImage}" data-username="${Username}" data-message="${Message}" style="cursor:pointer">
+        <i class="fa fa-reply"></i>
+       ${replyCount}
+        </a>
+</small>
+
+ <small class="pull-right text-muted btn_ReportUserflag_post${tblUserId}" style="margin-left:8px">
+ <a class="btn_spamPost" title="Spam User" data-id="${Id}" data-userid="${tblUserId}" data-userImg="${AvatarImage}" data-username="${Username}" style="cursor:pointer"> <i class="fa fa-flag"></i> </a>
+</small>
+ <small class="pull-right text-muted btn_Edit_post${tblUserId}" style="display:none;margin-left:8px">
+ <a class="btn_EditPost" title="Edit Post" style="cursor:pointer"> <i class="fa fa-pencil"></i> </a>
+</small>
+
+            </div>
+
+
+
+             <div id="div_modelPostReplies_${Id}" class="div_modelPostReplies_class" style="display:none;width:100%;height:auto;overflow:hidden" >
+
+
+                        <div  style="width:100%;height:auto;overflow:hidden">
+
+                            <div style="width:100%;height:auto;overflow:hidden">
+
+                                    <div class="row">
+                        <div class="col-md-12">
+
+
+                            <div class="form-group" style="clear:both;padding-top:5px">
+                                <div class="col-sm-7" style="margin-left:35px">
+                                    <div class="form-group" style="margin-bottom:0px">
+  <textarea id="txtArea_replyPost_${Id}" placeholder="Reply" style="border-color: #C5CAE9; height:45px;" class="form-control" maxlength="250"  cols="20" rows="10"></textarea>
+</div>
+
+
+                                    <div class="form-group">
+
+          <div class="checkbox" style="margin:0px">
+    <label>
+      <input type="checkbox" id="chk_isPrivate-replyPost_${Id}" style="margin-left:0px;left:0px"> Is Private
+    </label>
+  </div>
+
+</div>
+
+                                </div>
+                                <div class="col-sm-3">
+
+                                    <div class="form-group" style="clear:both;padding-top:10px;text-align:center">
+
+                               <input type="button" id="btn_ReplyPost_${Id}"  data-id="${Id}" data-userid="${tblUserId}" class="btn btn-info" value="Reply" />
+
+                            </div>
+                                    </div>
+                            </div>
+
+
+                        </div>
+                        </div>
+
+                            </div>
+
+                            <div style="width:100%;height:auto;overflow:hidden">
+
+                                <div id="div_loadingPostReply_${Id}" style="display:none;width:100%;height:auto;overflow:hidden;text-align:center">
+                                    <i class="fa fa-refresh fa-spin"></i>
+                                </div>
+
+                                 <ul id="ul_postReplyContent_${Id}" class="chat">
+
+
+                        </ul>
+
+
+                            </div>
+                        </div>
+
+               </div>
+
+
+
+
+                            </li>
+
+       </script>
+
+<script id="PostReply_template" type="text/x-jquery-tmpl">
+
+        <li class="left clearfix">
+                            <span class="chat-img pull-left" style="padding-left:45px;padding-right:5px" >
+                                <img src="${AvatarImage}" alt="${Username}" class="img-circle" title="${Username}" style="width:35px;height:35px" />
+                            </span>
+                            <div class="chat-body clearfix" style="font-size:13px;margin-left:80px">
+                                <div class="header" style="text-align:left">
+                                    <strong class="primary-font">${Username}</strong>
+
+                                        <small class="pull-right text-muted">
+                                        <span class="glyphicon glyphicon-time"></span> ${CreationTSStr}
+                                        </small>
+                                    </div>
+                                <p style="text-align:left">
+                                       ${Message}
+                                    </p>
+                                </div>
+                            </li>
+
+       </script>
+
+<script id="Inbox_template" type="text/x-jquery-tmpl">
+
+        <li class="left clearfix">
+            <a class="btn_show_replyInbox" title="show Message" data-id="${MsgId}" data-userid="${FromUserId}" data-userImg="${SenderAvatar}" data-username="${FromUserName}" style="cursor:pointer">
+                                <span class="chat-img pull-left">
+                                    <img src="${SenderAvatar}" alt="${FromUserName}" class="img-circle" title="${FromUserName}" style="width:50px;height:50px" />
+                                </span>
+                                <div class="chat-body clearfix">
+                                    <div class="header">
+                                        <strong class="primary-font">${FromUserName}</strong>
+
+                                        <small class="pull-right text-muted">
+                                           <span{ class="glyphicon glyphicon-time"></span>${CreationTSStr}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+                </a>
+
+
+             <div id="div_modelInboxReplies_${MsgId}" class="div_modelInboxReplies_class" style="display:none;width:100%;height:auto;overflow:hidden" >
+
+
+                        <div  style="width:100%;height:auto;overflow:hidden;text-align:left;padding:5px 20% 5px 20px">
+
+                            ${Message}
+                                        </div>
+
+
+                            <div style="width:100%;height:auto;overflow:hidden">
+
+                                    <div class="row">
+
+                                           <div class="col-md-12">
+
+
+                            <div class="form-group" style="clear:both;padding-top:5px">
+                                <div class="col-sm-7" style="margin-left:35px">
+                                    <div class="form-group" style="margin-bottom:0px">
+  <textarea id="txtArea_replyInbox_${MsgId}" placeholder="Reply" style="border-color: #C5CAE9; height:45px;" class="form-control" maxlength="250"  cols="20" rows="10"></textarea>
+</div>
+                                </div>
+                                <div class="col-sm-3">
+
+                                    <div class="form-group" style="clear:both;padding-top:10px;text-align:center">
+
+                               <input type="button" id="btn_ReplyInbox_${MsgId}"  data-id="${MsgId}" data-userid="${FromUserId}" class="btn btn-info" value="Reply" />
+
+                            </div>
+                                    </div>
+                            </div>
+
+
+                        </div>
+                        </div>
+
+                            </div>
+
+
+
+
+               </div>
+
+
+
+
+                            </li>
+
+       </script>
+
+<div id="div_result_body" style="width:100%;position:fixed;top:0;left:0;z-index:99999;line-height:30px;font-size:15px;text-align:center" >
+</div>
+
+
+
+<div id="div_loadingMain" style="display:none;position:fixed;width:100%;height:100%;background-color:black;opacity:0.7;z-index:9999">
+
+    <div class="loader" style="top:100px"> Loading... </div>
+
+</div>
+
+<input type="hidden" id="hdn_city" value="" />
+<input type="hidden" id="hdn_prov" value="" />
+<input type="hidden" id="hdn_country" value="" />
+<input type="hidden" id="hdn_latlon" value="" />
+<input type="hidden" id="hdn_zip" value="" />
+<input type="hidden" id="hdn_UserIsAuthenticated" value="" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6 ">
+            <img src="/assets/image/logo.png" class="logo2" alt="logo">
+            <div id="googleMap" style="margin-top: 2%;">
+            </div>
+        </div>
+        <div class="col-md-4 country_flag">
+            <div class="row">
+                <div class="col-md-12 country ">
+                    <span id="spanCountryName"></span>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <img id="spanCountryFlag" src="" class="flag" alt="">
+                            </td>
+                            <td valign="middle">
+                                <span style="font-family: Verdana" id="spanLocation"></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                    <span style="font-family: Verdana; color:black; font-size:10px" id="spanLocationLatlng">
+
+                                    </span> <br />
+                                <span style="font-family: Verdana; color:black; font-size:10px" id="spanLocationZip">
+
+                                    </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+
+                    <input type="text" id="SearchInput" class="form-control" placeholder="Search">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" id="SearchButton" class="btn btn-info btn-block">Search</button>
+
+                </div>
+            </div>
+            <div class="row select">
+                <div class="col-md-6">
+                </div>
+
+                <div class="col-md-6">
+                </div>
+            </div>
+            <div class="bs-example">
+                <ul class="nav nav-tabs tabspicker">
+                    <li id="li_home" class=""><a style="cursor:pointer" data-name="home">Home</a></li>
+                    <li id="li_post" class="active"><a style="cursor:pointer" data-name="post">Post</a></li>
+                    <li id="li_chat" ><a style="cursor:pointer" id="addClass" data-name="chat">Chat</a></li>
+
+
+                    <li id="li_video"><a style="cursor:pointer" data-name="video">Video</a></li>
+                    <li id="li_edu"><a style="cursor:pointer" data-name="for_you">Edu</a></li>
+                    <li id="li_inbox" style="display:none"><a id="btn_showInboxDiv" style="cursor:pointer" data-name="inbox">Inbox</a></li>
+
+                    <li id="li_setting" style="display:none"><a id="btn_showSettingDiv" style="cursor:pointer" data-name="setting">Setting</a></li>
+
+                </ul>
+
+                <div class="TabGroups" id="tHome" style="display: none">
+                    <video muted autoplay="autoplay" controls="controls" style="border-radius: 15px; width: 100%; height: 100%">
+
+                        <source src="https://signradar.com/videos/aslintro.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <div class="TabGroups" id="tPost" style="background-color:white">
+
+
+                    <table class="slideInLeft" align="center" style="width:80%">
+                        <tr>
+                            <td colspan="6">
+                                <span style="font-family: Verdana; color:black;font-size:11px;" id="spanLocationHeader"></span><br />
+                                <span style="font-family: Verdana; color:black;font-size:11px;" id="spanLocationExact"></span>
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td colspan="6">
+                                <div class="form-group" style="margin-bottom:5px" >
+                                    <textarea id="txt_postMsg" class="form-control" rows="3" placeholder="Message"></textarea>
+                                </div>
+
+
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td colspan="6">
+
+                                <div style="width:100%;height:auto;overflow:hidden;position:relative">
+
+                                    <div id="div_fu_Post_progressbar" style="display:none;position:absolute;height:45px;overflow:hidden;width:100%;background-color:white;opacity:0.9;z-index:1;top:0px">
+
+                                        <div id="fu_Post_progressbar" class="progressbar" style="height:15px;border:0px;bottom:0px;margin-top:5px;position:inherit">
+                                            <div id="fu_UPImage_progresslabel" class="progressbarlabel" style="height:15px;"></div>
+                                        </div>
+
+                                        <div style="width:100%;height:auto;overflow:hidden;text-align:center">
+                                            <a id="btn_cancelUpload" style="color:navy" >Cancel</a>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="div_upload" style="width:auto;height:auto;overflow:hidden;float:left">
+                                        <div  style="margin-bottom:5px;float:left;display:block">
+
+
+                                            <div class="uploaddiv" title="Post Image" style="margin-right:5px;;width:40px">
+                                                <div class="fileUpload btn btn-default" style="line-height:26px">
+                                                    <span><i class="fa fa-camera"></i></span>
+                                                    <input  id="fu_PostImage" class="upload" name="file" type="file" accept="image/*"  />
+
+
+
+                                                </div>         </div>
+
+                                        </div>
+
+                                        <div style="margin-bottom:5px;float:left;display:block">
+
+                                            <div class="uploaddiv" title="Post Video" style="margin-right:5px;width:40px">
+                                                <div class="fileUpload btn btn-default" style="line-height:26px">
+                                                    <span><i class="fa fa-video-camera"></i></span>
+                                                    <input  id="fu_PostVideo" class="upload" name="file" type="file" accept="video/*"  />
+
+                                                </div>         </div>
+
+                                        </div>
+
+                                        <div style="margin-bottom:5px;float:left;display:block">
+
+                                            <div class="uploaddiv" title="Post Youtube Video" style="margin-right:5px;width:40px">
+
+                                                <a  id="btn_OpenYoutubeLink" class="upload" name="file"   >
+                                                    <div class="fileUpload btn btn-default" style="line-height:26px">
+                                                        <span><i class="fa fa-youtube"></i></span>
+
+
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                        </div>
+
+                                        <div style="margin-bottom:5px;float:left;display:block">
+
+                                            <select  id="ddl_postType" class="form-control input-sm">
+                                                <option value="event">Event</option>
+                                                <option value="info">Info</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+
+                                    <input type="hidden" id="hdn_uploadType"  />
+
+
+                                    <div id="div_contantHolder" style="display:none;width:100px;text-align:left;height:auto;position:relative;float:left">
+                                        <a id="btn_deleteContent" style="position:absolute;z-index: 1;color: black;font-size: 20px;top: -8px;right: -13px;"><i class="fa fa-times"></i></a>
+
+                                        <div id="image-holder"></div>
+
+                                    </div>
+
+                                    <div style="margin-bottom:5px;float:right;line-height:40px">
+
+                                        <input type="button" id="btn_post" class="btn btn-primary" value="Post" />
+
+                                    </div>
+
+                                </div>
+
+                                <div id="div_youtubeLink" style="display:none">
+                                    <input type="hidden" id="hdn_youtubeId" value="" />
+                                    <input type="text" id="txt_youtubeLink" placeholder="Enter you tube url" />
+
+                                    <input id="btn_IsValidYoutubeLink" type="button" value="Validate URL" />
+                                    <p id="aa"></p>
+                                </div>
+
+
+
+
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+
+                    <div class="panel-body" style="height:auto;overflow:hidden;position:relative;min-height:50px">
+                        <div id="div_loadingPost" class="signal" style="display:none;top:20px"></div>
+
+                        <ul id="ul_postContent" class="chat">
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <div class="TabGroups" id="tChat" style="display: none;position:relative;overflow:hidden;min-height:50px;max-height:auto;background-color:#fff;border-radius:10px">
+
+                    <div class="row">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+
+                                    <div class="input-group">
+
+
+                                        <textarea id="txt_chat" class="form-control input-sm" placeholder="Type your message here..." ></textarea>
+
+                                        <span class="input-group-btn">
+                                <a style="cursor:pointer;width:70px" class="btn btn-warning btn-sm" id="btn-chat">
+                                    Send
+                                </a>
+                            </span>
+                                    </div>
+
+                                </div>
+                                <div class="panel-body" style="height:auto;overflow:hidden">
+                                    <div id="div_loadingChat" class="signal" style="display:none;top:88px"></div>
+
+                                    <ul id="ul_chatContent" class="chat">
+
+                                    </ul>
+
+                                </div>
+                                <div class="panel-footer">
+                                    <!--<div class="input-group">
+                                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-warning btn-sm" id="btn-chat">
+                                                Send
+                                            </button>
+                                        </span>
+                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="TabGroups" id="tVideo" style="display: none">
+                    <div id="groupVideoChat">
+                        <div id="videos-container"></div>
+                        <div id="bitrateIndicator"></div>
+                    </div>
+                </div>
+
+                <div class="TabGroups" id="tEdu" style="display: none">
+                    Edu
+                </div>
+
+                <div class="TabGroups" id="tInbox" style="display: none">
+
+
+                    <div class="panel-body" style="height:auto;overflow:hidden;position:relative;min-height:50px">
+                        <div id="div_loadingInbox" class="signal" style="display:none;top:20px"></div>
+
+                        <ul id="ul_inboxContent" class="chat" style="background:white">
+
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <div class="TabGroups" id="tSetting" style="display:none">
+
+
+
+
+                    <h2>Settings</h2>
+
+
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#divSetting_avatar">Change Avatar</a>
+                                </h4>
+                            </div>
+                            <div id="divSetting_avatar" class="panel-collapse collapse in">
+                                <div class="panel-body" style="text-align:center;height:auto;overflow:hidden;position:relative">
+
+                                    <img id="UserAvatarPic_setting" src="https://signradar.com/userfiles/malefemale.png" class="avatar" style="display:none;width: 120px; height: 120px;border-bottom-left-radius:0px;border-bottom-right-radius:0px" alt="">
+                                    <br />
+
+                                    <label class="btn btn-info btn-file">
+                                        Change Avatar <input id="fu_userAvatar" type="file" style="display: none;">
+                                    </label>
+
+                                    <div id="div_fu_userAvatar_progressbar" style="display:none;position:absolute;height:45px;overflow:hidden;width:100%;background-color:white;opacity:0.9;z-index:1;top:125px">
+
+                                        <div id="fu_userAvatar_progressbar" class="progressbar" style="height:15px;border:0px;bottom:0px;margin-top:5px;position:inherit;margin-left:115px">
+                                            <div id="fu_UAImage_progresslabel" class="progressbarlabel" style="height:15px;"></div>
+                                        </div>
+
+                                        <div style="width:100%;height:auto;overflow:hidden;text-align:center">
+                                            <a id="btn_cancelUpload_userAvatar" style="color:navy" >Cancel</a>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading" >
+                                <h4 class="panel-title" >
+                                    <a  data-toggle="collapse" data-parent="#accordion" href="#divSetting_ChangePwd">Change Password</a>
+                                </h4>
+                            </div>
+                            <div id="divSetting_ChangePwd" class="panel-collapse collapse">
+                                <div class="panel-body">
+
+
+                                    <div style="width:100%;height:auto;overflow:hidden;padding:10px 20%">
+
+                                        <div class="col-sm-12">
+                                            <input type="password" id="txt_oldP" class="form-control" placeholder="Old Password" />
+                                        </div>
+                                        <div class="col-sm-12" style="margin-top:5px">
+                                            <input type="password" id="txt_newP" class="form-control" placeholder="New Password" />
+                                        </div>
+                                        <div class="col-sm-12" style="margin-top:5px">
+                                            <input type="password" id="txt_newConP" class="form-control" placeholder="Confirm New Password" />
+                                        </div>
+
+
+                                        <div class="col-sm-12" style="margin-top:10px;text-align:center">
+                                            <input type="button" id="btn_updatePassword" class="btn btn-default" value="Change Password" />
+                                        </div>
+
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#divSetting_zipcode">Default ZipCode</a>
+                                </h4>
+                            </div>
+                            <div id="divSetting_zipcode" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div style="width:100%;height:auto;overflow:hidden;padding:10px 20%">
+
+                                        <div class="col-sm-12">
+                                            <input type="text" id="txt_userZipCode" class="form-control" placeholder="Default Zip Code" />
+                                        </div>
+
+
+                                        <div class="col-sm-12" style="margin-top:10px;text-align:center">
+                                            <input type="button" id="btn_updateZipCode" class="btn btn-default" value="Update Zipcode" />
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#divSetting_profile">Personal Profile</a>
+                                </h4>
+                            </div>
+                            <div id="divSetting_profile" class="panel-collapse collapse">
+                                <div class="panel-body">
+
+                                    <div class="form-group Challenge">
+                                        <label class="sr-only">Personal Information</label>
+
+                                        <label style="">
+                                            <input type="checkbox" name="checkbox"  class=" mb10" id="reg_form_checkboxbio" style="position:inherit"> Public
+                                        </label>
+                                        <div class="form-group profile ">
+                                            <textarea class="form-control mt25" id="txbxPersonalBio" rows="4" placeholder="Your Bio..."></textarea>
+                                        </div>
+                                        <button type="button" id="btnPersonalProfile" class="btn">Update</button>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-md-2 ">
+            <img id="UserAvatarPic" src="https://signradar.com/userfiles/malefemale.png" class="avatar" style="display:none;width: 100px; height: 100px; float: right" alt="">
+
+            <div id="divVideo" class="avatar" runat="server" >
+
+            </div>
+            <div id="btn_username" class="dropdown" style="display:none">
+                <button class=" dropdown-toggle menu" type="button" data-toggle="dropdown">
+
+                    <h4 class="name_surname" id="UsernameDisplay" style="font-family: Verdana; color: blue; font-style: italic; font-size: 16px; float: right"></h4>
+                </button>
+                <ul class="dropdown-menu change" data-dropdown-in="flipInX" data-dropdown-out="flipOutX">
+
+                    <li><a id="btn_logout" style="cursor:pointer">Logout
+
+
+                    </a></li>
+
+                </ul>
+            </div>
+
+            <div id="div_login" class="row" style="display:block">
+                <button class="btn btn-link myBtn3" style="float: right">Sign In <i class="fa fa-sign-in" aria-hidden="true"></i></button>
+                <button class="btn btn-link myBtn2" style="float: right">Sign Up <i class="fa fa-user-plus" aria-hidden="true"></i></button>
+
+            </div>
+            <br />
+            <div id="AreaAvatars" style="height:auto;">
+
+            </div>
+
+            <div class="modal fade" id="myModal3" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h4 class="modal-title">Sign In</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center" style="padding: 50px 0">
+                                <div class="login-form-1">
+                                    <form id="login-form" class="text-left">
+                                        <div class="login-form-main-message"></div>
+                                        <div class="main-login-form">
+                                            <div class="login-group">
+                                                <div class="form-group">
+                                                    <label for="Username" class="sr-only">Username</label>
+                                                    <input type="text" class="form-control" id="Username" name="Username" placeholder="username">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="Password" class="sr-only">Password</label>
+                                                    <input type="password" class="form-control" id="Password" name="Password" placeholder="password">
+                                                </div>
+                                                <div class="form-group login-group-checkbox">
+                                                    <input type="checkbox" checked="checked" id="KeepLogin" name="KeepLogin">
+                                                    <label for="KeepLogin">remember</label>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
+                                        </div>
+
+                                        <p class="forgot myBtn1" style="float: right; color: blue">Forgot your password ?</p>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="LoginDialogCloseButton" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal fade" id="myModal2" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h4 class="modal-title">Sign Up</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center" style="padding: 50px 0">
+                                <div class="login-form-1">
+                                    <img src="" id="regImageFlag" />
+                                    <form id="register-form" class="text-left">
+                                        <div class="login-form-main-message"></div>
+                                        <div class="main-login-form" id="divRegForm">
+                                            <div class="login-group">
+                                                <div class="form-group">
+                                                    <label for="country" class="sr-only">Country</label>
+                                                    <select id="country" name="country" class="dropdown">
+                                                        <option selected="selected">Please choose your country</option>
+                                                        <option>Andorra</option>
+                                                        <option>United Arab Emirates</option>
+                                                        <option>Afghanistan</option>
+                                                        <option>Antigua and Barbuda</option>
+                                                        <option>Anguilla</option>
+                                                        <option>Albania</option>
+                                                        <option>Armenia</option>
+                                                        <option>Angola</option>
+                                                        <option>Antarctica</option>
+                                                        <option>Argentina</option>
+                                                        <option>American Samoa</option>
+                                                        <option>Austria</option>
+                                                        <option>Australia</option>
+                                                        <option>Aruba</option>
+                                                        <option>Åland Islands</option>
+                                                        <option>Azerbaijan</option>
+                                                        <option>Bosnia and Herzegovina</option>
+                                                        <option>Barbados</option>
+                                                        <option>Bangladesh</option>
+                                                        <option>Belgium</option>
+                                                        <option>Burkina Faso</option>
+                                                        <option>Bulgaria</option>
+                                                        <option>Bahrain</option>
+                                                        <option>Burundi</option>
+                                                        <option>Benin</option>
+                                                        <option>Saint Barthélemy</option>
+                                                        <option>Bermuda</option>
+                                                        <option>Brunei Darussalam</option>
+                                                        <option>Bolivia</option>
+                                                        <option>Caribbean Netherlands </option>
+                                                        <option>Brazil</option>
+                                                        <option>Bahamas</option>
+                                                        <option>Bhutan</option>
+                                                        <option>Bouvet Island</option>
+                                                        <option>Botswana</option>
+                                                        <option>Belarus</option>
+                                                        <option>Belize</option>
+                                                        <option>Canada</option>
+
+                                                        <option>Congo, Democratic Republic of</option>
+                                                        <option>Central African Republic</option>
+                                                        <option>Congo</option>
+                                                        <option>Switzerland</option>
+                                                        <option>Côte d'Ivoire</option>
+                                                        <option>Cook Islands</option>
+                                                        <option>Chile</option>
+                                                        <option>Cameroon</option>
+                                                        <option>China</option>
+                                                        <option>Colombia</option>
+                                                        <option>Costa Rica</option>
+                                                        <option>Cuba</option>
+                                                        <option>Cape Verde</option>
+                                                        <option>Curaçao</option>
+                                                        <option>Christmas Island</option>
+                                                        <option>Cyprus</option>
+                                                        <option>Czech Republic</option>
+                                                        <option>Germany</option>
+                                                        <option>Djibouti</option>
+                                                        <option>Denmark</option>
+                                                        <option>Dominica</option>
+                                                        <option>Dominican Republic</option>
+                                                        <option>Algeria</option>
+                                                        <option>Ecuador</option>
+                                                        <option>Estonia</option>
+                                                        <option>Egypt</option>
+                                                        <option>Western Sahara</option>
+                                                        <option>Eritrea</option>
+                                                        <option>Spain</option>
+                                                        <option>Ethiopia</option>
+                                                        <option>Finland</option>
+                                                        <option>Fiji</option>
+                                                        <option>Falkland Islands</option>
+
+                                                        <option>Faroe Islands</option>
+                                                        <option>France</option>
+                                                        <option>Gabon</option>
+                                                        <option>United Kingdom</option>
+                                                        <option>Grenada</option>
+                                                        <option>Georgia</option>
+                                                        <option>French Guiana</option>
+                                                        <option>Guernsey</option>
+                                                        <option>Ghana</option>
+                                                        <option>Gibraltar</option>
+                                                        <option>Greenland</option>
+                                                        <option>Gambia</option>
+                                                        <option>Guinea</option>
+                                                        <option>Guadeloupe</option>
+                                                        <option>Equatorial Guinea</option>
+                                                        <option>Greece</option>
+
+                                                        <option>Guatemala</option>
+                                                        <option>Guam</option>
+                                                        <option>Guinea-Bissau</option>
+                                                        <option>Guyana</option>
+                                                        <option>Hong Kong</option>
+
+                                                        <option>Honduras</option>
+                                                        <option>Croatia</option>
+                                                        <option>Haiti</option>
+                                                        <option>Hungary</option>
+                                                        <option>Indonesia</option>
+                                                        <option>Ireland</option>
+                                                        <option>Israel</option>
+                                                        <option>Isle of Man</option>
+                                                        <option>India</option>
+
+                                                        <option>Iraq</option>
+                                                        <option>Iran</option>
+                                                        <option>Iceland</option>
+                                                        <option>Italy</option>
+                                                        <option>Jersey</option>
+                                                        <option>Jamaica</option>
+                                                        <option>Jordan</option>
+                                                        <option>Japan</option>
+                                                        <option>Kenya</option>
+                                                        <option>Kyrgyzstan</option>
+                                                        <option>Cambodia</option>
+                                                        <option>Kiribati</option>
+                                                        <option>Comoros</option>
+
+                                                        <option>North Korea</option>
+                                                        <option>South Korea</option>
+                                                        <option>Kuwait</option>
+                                                        <option>Cayman Islands</option>
+                                                        <option>Kazakhstan</option>
+                                                        <option>Lao People's Democratic Republic</option>
+                                                        <option>Lebanon</option>
+                                                        <option>Saint Lucia</option>
+                                                        <option>Liechtenstein</option>
+                                                        <option>Sri Lanka</option>
+                                                        <option>Liberia</option>
+                                                        <option>Lesotho</option>
+                                                        <option>Lithuania</option>
+                                                        <option>Luxembourg</option>
+                                                        <option>Latvia</option>
+                                                        <option>Libya</option>
+                                                        <option>Morocco</option>
+                                                        <option>Monaco</option>
+                                                        <option>Moldova</option>
+                                                        <option>Montenegro</option>
+
+                                                        <option>Madagascar</option>
+                                                        <option>Marshall Islands</option>
+                                                        <option>Macedonia</option>
+                                                        <option>Mali</option>
+                                                        <option>Myanmar</option>
+                                                        <option>Mongolia</option>
+                                                        <option>Macau</option>
+                                                        <option>Northern Mariana Islands</option>
+                                                        <option>Martinique</option>
+                                                        <option>Mauritania</option>
+                                                        <option>Montserrat</option>
+                                                        <option>Malta</option>
+                                                        <option>Mauritius</option>
+                                                        <option>Maldives</option>
+                                                        <option>Malawi</option>
+                                                        <option>Mexico</option>
+                                                        <option>Malaysia</option>
+                                                        <option>Mozambique</option>
+                                                        <option>Namibia</option>
+                                                        <option>New Caledonia</option>
+                                                        <option>Niger</option>
+                                                        <option>Norfolk Island</option>
+                                                        <option>Nigeria</option>
+                                                        <option>Nicaragua</option>
+                                                        <option>The Netherlands</option>
+                                                        <option>Norway</option>
+                                                        <option>Nepal</option>
+                                                        <option>Nauru</option>
+                                                        <option>Niue</option>
+                                                        <option>New Zealand</option>
+                                                        <option>Oman</option>
+                                                        <option>Panama</option>
+                                                        <option>Peru</option>
+                                                        <option>French Polynesia</option>
+                                                        <option>Papua New Guinea</option>
+                                                        <option>Philippines</option>
+                                                        <option>Pakistan</option>
+                                                        <option>Poland</option>
+
+                                                        <option>Pitcairn</option>
+                                                        <option>Puerto Rico</option>
+                                                        <option>Palestine, State of</option>
+                                                        <option>Portugal</option>
+                                                        <option>Palau</option>
+                                                        <option>Paraguay</option>
+                                                        <option>Qatar</option>
+                                                        <option>Réunion</option>
+                                                        <option>Romania</option>
+                                                        <option>Serbia</option>
+                                                        <option>Russian Federation</option>
+                                                        <option>Rwanda</option>
+                                                        <option>Saudi Arabia</option>
+                                                        <option>Solomon Islands</option>
+                                                        <option>Seychelles</option>
+                                                        <option>Sudan</option>
+                                                        <option>Sweden</option>
+                                                        <option>Singapore</option>
+                                                        <option>Saint Helena</option>
+                                                        <option>Slovenia</option>
+
+                                                        <option>Slovakia</option>
+                                                        <option>Sierra Leone</option>
+                                                        <option>San Marino</option>
+                                                        <option>Senegal</option>
+                                                        <option>Somalia</option>
+                                                        <option>Suriname</option>
+                                                        <option>South Sudan</option>
+                                                        <option>Sao Tome and Principe</option>
+                                                        <option>El Salvador</option>
+
+                                                        <option>Syria</option>
+                                                        <option>Swaziland</option>
+                                                        <option>Turks and Caicos Islands</option>
+                                                        <option>Chad</option>
+                                                        <option>French Southern Territories</option>
+                                                        <option>Togo</option>
+                                                        <option>Thailand</option>
+                                                        <option>Tajikistan</option>
+                                                        <option>Tokelau</option>
+                                                        <option>Timor-Leste</option>
+                                                        <option>Turkmenistan</option>
+                                                        <option>Tunisia</option>
+                                                        <option>Tonga</option>
+                                                        <option>Turkey</option>
+                                                        <option>Trinidad and Tobago</option>
+                                                        <option>Tuvalu</option>
+                                                        <option>Taiwan</option>
+                                                        <option>Tanzania</option>
+                                                        <option>Ukraine</option>
+                                                        <option>Uganda</option>
+
+                                                        <option>United States</option>
+                                                        <option>Uruguay</option>
+                                                        <option>Uzbekistan</option>
+                                                        <option>Vatican</option>
+
+                                                        <option>Venezuela</option>
+                                                        <option>Virgin Islands Br</option>
+                                                        <option>Virgin Islands US</option>
+                                                        <option>Vietnam</option>
+                                                        <option>Vanuatu</option>
+
+                                                        <option>Samoa</option>
+                                                        <option>Yemen</option>
+                                                        <option>Mayotte</option>
+                                                        <option>South Africa</option>
+                                                        <option>Zambia</option>
+                                                        <option>Zimbabwe</option>
+
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="username" class="sr-only">Username</label>
+                                                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="password" class="sr-only">Password</label>
+                                                    <input type="password" class="form-control" id="password" name="password" placeholder="password">
+                                                </div>
+
+
+                                                <div class="form-group">
+                                                    <label for="reg_email" class="sr-only">Email</label>
+                                                    <input type="text" class="form-control" id="email" name="email" placeholder="email">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="reg_fullname" class="sr-only">Full Name</label>
+                                                    <input type="text" class="form-control" id="fullname" name="fullname" placeholder="full name">
+                                                </div>
+
+                                                <div class="form-group" id="divCity">
+                                                    <label for="City" class="sr-only">City</label>
+                                                    <input type="text" class="form-control" id="city" name="city" placeholder="City">
+                                                </div>
+
+
+                                                <div class="form-group" id="divState">
+                                                    <label for="State" class="sr-only">State/Prov.</label>
+                                                    <input type="text" class="form-control" id="state" name="state" placeholder="State/Prov.">
+                                                </div>
+
+
+                                                <div class="form-group" id="divStateUSA">
+                                                    <label for="country" class="sr-only">Country</label>
+                                                    State: <select id="stateusa" name="stateusa" class="dropdown">
+                                                    <option selected="selected">Please choose State.</option>
+                                                    <option>Alabama</option>
+                                                    <option>Alaska</option>
+                                                    <option>Arizona</option>
+                                                    <option>Arkansas</option>
+                                                    <option>California</option>
+                                                    <option>Colorado</option>
+                                                    <option>Connecticut</option>
+                                                    <option>Delaware</option>
+                                                    <option>Florida</option>
+                                                    <option>Georgia</option>
+                                                    <option>Hawaii</option>
+                                                    <option>Idaho</option>
+                                                    <option>Illinois</option>
+                                                    <option>Indiana</option>
+                                                    <option>Iowa</option>
+                                                    <option>Kansas</option>
+                                                    <option>Kentucky</option>
+                                                    <option>Louisiana</option>
+                                                    <option>Maine</option>
+                                                    <option>Maryland</option>
+                                                    <option>Massachusetts</option>
+                                                    <option>Michigan</option>
+                                                    <option>Minnesota</option>
+                                                    <option>Mississippi</option>
+                                                    <option>Missouri</option>
+                                                    <option>Montana</option>
+                                                    <option>Nebraska</option>
+                                                    <option>Nevada</option>
+                                                    <option>New Hampshire</option>
+                                                    <option>New Jersey</option>
+                                                    <option>New Mexico</option>
+                                                    <option>New York</option>
+                                                    <option>North Carolina</option>
+                                                    <option>North Dakota</option>
+                                                    <option>Ohio</option>
+                                                    <option>Oklahoma</option>
+                                                    <option>Oregon</option>
+                                                    <option>Pennsylvania</option>
+                                                    <option>Rhode Island</option>
+                                                    <option>South Carolina</option>
+                                                    <option>South Dakota</option>
+                                                    <option>Tennessee</option>
+                                                    <option>Texas</option>
+                                                    <option>Utah</option>
+                                                    <option>Vermont</option>
+                                                    <option>Virginia</option>
+                                                    <option>Washington</option>
+                                                    <option>West Virginia</option>
+                                                    <option>Wisconsin</option>
+                                                    <option>Wyoming</option>
+
+                                                </select>
+                                                </div>
+
+                                                <div class="form-group" id="divZipcode">
+                                                    <label for="Zipcode" class="sr-only" id="ZipcodeLabel">Zipcode</label>
+                                                    <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="Zipcode (ex. 94519)">
+                                                </div>
+
+                                                <div class="form-group login-group-checkbox">
+                                                    <input type="checkbox" class="" id="TnC" name="TnC" checked="checked">
+                                                    <label for="TnC">i agree with <a href="/tnc.html" target="_blank">terms and condition</a></label>
+                                                </div>
+                                            </div>
+                                            <button type="submit" id="SignupButton" class="login-button">
+                                        </div>
+                                        <iframe src="" id="iFrameUploadAvatar" style="width: 100%; border: none; padding: 0px; margin: 0px; overflow: hidden; display: none"></iframe>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" id="btnRegClose" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="myModal1" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h4 class="modal-title">Forgot</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center" style="padding: 12px 0">
+                                <div class="logo">forgot password</div>
+                                <!-- Main Form -->
+                                <div class="login-form-1">
+                                    <form id="forgot-password-form" class="text-left">
+                                        <div class="etc-login-form">
+                                            <p>When you fill in your registered email address, you will be sent instructions on how to reset your password.</p>
+                                        </div>
+                                        <div class="login-form-main-message"></div>
+                                        <div class="main-login-form">
+                                            <div class="login-group">
+                                                <div class="form-group">
+                                                    <label for="fp_email" class="sr-only">Email address</label>
+                                                    <input type="text" class="form-control" id="fp_email" name="fp_email" placeholder="email address">
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
+                                        </div>
+
+
+                                    </form>
+                                </div>
+                                <!-- end:Main Form -->
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+            <div id="modelReportSpam" class="modal fade" role="dialog" title="Report Spam" >
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h4 class="modal-title">Are you sure to Report user ?</h4>
+                            <img id="img_reportUser" src="" style="width:30px;height:30px" />
+                            <span id="lbl_reportUsername"></span>
+                            <input type="hidden" id="hdn_blackListUserId" />
+                            <input type="hidden" id="hdn_blackListSource" />
+                            <input type="hidden" id="hdn_blackListSourceId" />
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <label class="col-sm-3 control-label">Source</label>
+                                    <div class="col-sm-8">
+                                        <span id="lbl_source"></span>
+
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <span style="color:red;">*</span>
+                                    </div>
+                                </div>--%>
+
+                                    <div class="form-group" style="clear:both;padding-top:5px">
+                                        <label class="col-sm-3 control-label">Comment</label>
+                                        <div class="col-sm-8">
+                                            <textarea id="txtAccuserComment" placeholder="Your Comment.." style="border-color: #C5CAE9; height: 125px;" class="form-control" maxlength="250"  cols="20" rows="10"></textarea>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <span style="color:red;">*</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="clear:both;padding-top:10px;text-align:center">
+
+                                        <input type="button" id="btn_ReportUser" class="btn btn-info" value="Report User" />
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+
+</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZmg-iBCLGl605niAVs44Hj1-nnlJGOf0"></script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<script type="text/javascript" src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
+<script type="text/javascript" src="https://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/tutorial.js"></script>
+<script src="/assets/js/jquery-ui.js"></script>
+<script src="/assets/js/jquery.tmpl.min.js"></script>
+<script src="/assets/js/script.js?636105025784123120"></script>
+
+<!-- ########################### -->
+<!-- XRTC ADDED CODE BLOCK BEGIN -->
+<!-- ########################### -->
+
+<script>
+    var herokuURL = 'https://srwebrtc.herokuapp.com/';
+    var getRoomId = () => {
+        return $("#UsernameDisplay").html();
+    };
+
+    var roomid = ($("#spanlocation").html() || 'anonymous');
+    var chatIsOpened = false;
+
+    var openVideoChat = function (thisroomid) {
+        if (chatIsOpened) { return false; };
+        var connection = new RTCMultiConnection();
+        connection.socketURL = herokuURL;
+        connection.socketMessageEvent = 'video-conference-demo';
+        connection.session = { audio: true, video: true };
+        connection.sdpConstraints.mandatory = { OfferToReceiveAudio: true, OfferToReceiveVideo: true };
+        connection.videosContainer = document.getElementById('videos-container');
+        connection.onstream = function(event) {
+            var width = parseInt(connection.videosContainer.clientWidth / 2) - 20;
+            var mediaElement = getMediaElement(event.mediaElement, {
+                title: event.userid,
+                buttons: ['full-screen'],
+                width: width,
+                showOnMouseEnter: false
+            });
+            connection.videosContainer.appendChild(mediaElement);
+            setTimeout(function() { mediaElement.media.play(); }, 5000);
+            mediaElement.id = event.streamid;
+        };
+        connection.onstreamended = function(event) {
+            var mediaElement = document.getElementById(event.streamid);
+            if(mediaElement) { mediaElement.parentNode.removeChild(mediaElement); }
+        };
+        connection.openOrJoin(thisroomid);
+        chatIsOpened = true;
+
+        var bitrates = {
+            audio: connection.bandwidth.audio,
+            screen: connection.bandwidth.screen,
+            video: connection.bandwidth.video,
+        };
+
+        var bitrateIndicatorEl = document.getElementById('bitrateIndicator');
+        bitrateIndicatorEl.innerHTML = ('Bitrates: [audio: ' + bitrates.audio
+        + '] [your stream: ' + bitrates.screen
+        + '] [other streams: ' + bitrates.video + ']');
+    };
+
+    let tabLink = $('a[data-name="video"]');
+    //  let tabLink = $('#vchatstart');
+    tabLink.click((ev) => {
+        ev.preventDefault();
+        var roomid = ($("#spanLocation").html() || 'anonymous');
+        openVideoChat(roomid);
+    });
+</script>
+
+<!-- ######################### -->
+<!-- XRTC ADDED CODE BLOCK END -->
+<!-- ######################### -->
+</body>
+
+</html>
